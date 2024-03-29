@@ -13,7 +13,7 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 from pathlib import Path
 import os
 from dotenv import load_dotenv
-
+import json
 load_dotenv()
 
 
@@ -170,5 +170,5 @@ from firebase_admin import credentials
 if DEBUG:
     cred = credentials.Certificate('service-account.json')
 else:
-    cred = credentials.Certificate(os.getenv('FIREBASE_SERVICE_ACCOUNT'))
+    cred = credentials.Certificate(json.loads(os.getenv('FIREBASE_SERVICE_ACCOUNT')))
 app = firebase_admin.initialize_app(cred)
