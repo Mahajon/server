@@ -30,7 +30,7 @@ KEY = 'django-insecure-=cldztbc4jg&xl0!x673!*v2_=p$$eu)=7*f#d0#zs$44xx-h^'
 SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True if os.getenv('DEBUG') == 'True' else False
+DEBUG = False if os.getenv('DEBUG') == 'False' else True
 
 ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app', 'localhost:3000']
 
