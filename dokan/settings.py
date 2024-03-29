@@ -11,6 +11,12 @@ https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 
 from pathlib import Path
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
+
+
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -20,12 +26,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-=cldztbc4jg&xl0!x673!*v2_=p$$eu)=7*f#d0#zs$44xx-h^'
+KEY = 'django-insecure-=cldztbc4jg&xl0!x673!*v2_=p$$eu)=7*f#d0#zs$44xx-h^'
+SECRET_KEY = os.getenv('SECRET_KEY') if os.getenv('SECRET_KEY') else KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = True if os.getenv('DEBUG') == 'True' else False
 
-ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app']
+ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app', 'localhost:3000']
 
 
 # Application definition
@@ -41,8 +48,8 @@ INSTALLED_APPS = [
     'rest_framework',
     'user',
     'shop',
-    # 'product',
-    # 'order',
+    'product',
+    'order',
 ]
 
 MIDDLEWARE = [
@@ -160,8 +167,8 @@ import firebase_admin
 from firebase_admin import credentials
 
 # Initialize the Firebase Admin SDK
-cred = credentials.Certificate('service-account.json')
+if DEBUG:
+    cred = credentials.Certificate('service-account.json')
+else:
+    cred = credentials.Certificate(os.getenv('FIREBASE_SERVICE_ACCOUNT'))
 app = firebase_admin.initialize_app(cred)
-
-
-
