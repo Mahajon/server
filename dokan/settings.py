@@ -141,8 +141,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 # Add the Firebase Authentication backend to the list of authentication backends
 
 AUTHENTICATION_BACKENDS = [
-    'auth.backends.FirebaseAuthenticationBackend',
     'django.contrib.auth.backends.ModelBackend',
+    'user.firebase.backend.FirebaseAuthenticationBackend',
 ]
 
 
@@ -163,12 +163,23 @@ AUTH_USER_MODEL = 'user.User'
 # You can use Firebase Storage to store files and Firebase Cloud Functions
 # to run server-side code.
 
-import firebase_admin
-from firebase_admin import credentials
 
-# Initialize the Firebase Admin SDK
-if DEBUG:
-    cred = credentials.Certificate('service-account.json')
-else:
-    cred = credentials.Certificate(json.loads(os.getenv('FIREBASE_SERVICE_ACCOUNT')))
-app = firebase_admin.initialize_app(cred)
+# Django REST framework settings
+REST_FRAMEWORK = {
+    'DEFAULT_AUTHENTICATION_CLASSES': [
+        'rest_framework.authentication.SessionAuthentication',
+        'user.firebase.backend.FirebaseAuthenticationBackend',
+    ],
+    'DEFAULT_PERMISSION_CLASSES': [
+        'rest_framework.permissions.IsAuthenticated',
+    ],
+    'DEFAULT_SCHEMA_CLASS': 'rest_framework.schemas.coreapi.AutoSchema',
+}
+
+# email settings
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = os.getenv('EMAIL_HOST')
+EMAIL_PORT = os.getenv('EMAIL_PORT')
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD')

@@ -6,3 +6,5 @@ django_filter==24.2
 drf-yasg
 drf-yasg[validation]
 python-dotenv==1.0.1
+django-cors-headers
+whitenoise
