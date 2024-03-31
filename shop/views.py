@@ -41,20 +41,20 @@ class ShopDetailView(APIView):
     serializer_class = ShopSerializer
     permission_classes = [IsAuthenticated, IsShopOwnerOrManager]
 
-    def get_object(self, pk):
+    def get_object(self, slug):
         try:
-            return Shop.objects.get(pk=pk)
+            return Shop.objects.get(slug=slug)
         except Shop.DoesNotExist:
             raise Http404
 
-    def get(self, request, pk):
-        shop = self.get_object(pk)
+    def get(self, request, slug):
+        shop = self.get_object(slug)
         serialized_shop = ShopSerializer(shop)
         return Response(serialized_shop.data)
 
 
-    def put(self, request, pk):
-        shop = self.get_object(pk)
+    def put(self, request, slug):
+        shop = self.get_object(slug)
         self.check_object_permissions(request, shop)
         serialized_shop = ShopSerializer(shop, data=request.data, partial=True)
         if serialized_shop.is_valid(raise_exception=True):
@@ -63,8 +63,8 @@ class ShopDetailView(APIView):
         return Response(serialized_shop.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-    def delete(self, request, pk):
-        shop = self.get_object(pk)
+    def delete(self, request, slug):
+        shop = self.get_object(slug)
         self.check_object_permissions(request, shop)
         shop.delete()
         return Response(status=status.HTTP_200_OK)
