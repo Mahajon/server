@@ -2,7 +2,7 @@ from rest_framework import authentication
 from .exceptions import NoAuthToken, InvalidAuthToken, FirebaseError, EmailVerification, EmailExists
 from firebase_admin import auth, credentials
 import firebase_admin
-from user.models import User
+from user.models import User, Provider
 import os
 import json
 from dokan.settings import DEBUG, BASE_DIR
@@ -22,12 +22,9 @@ except Exception:
 
 
 class FirebaseAuthenticationBackend(authentication.BaseAuthentication):
-
-
-
     keyword = 'Bearer'
+    
     def authenticate(self, request):
-
         auth_header = request.META.get('HTTP_AUTHORIZATION')
         if not auth_header:
             raise NoAuthToken("No authentication token provided.")
@@ -35,7 +32,6 @@ class FirebaseAuthenticationBackend(authentication.BaseAuthentication):
         decoded_token = None
         try:
             decoded_token = auth.verify_id_token(id_token)
-            print(decoded_token)
         except Exception:
             raise InvalidAuthToken("Invalid authentication token provided.")
         if not id_token or not decoded_token:
@@ -61,11 +57,11 @@ class FirebaseAuthenticationBackend(authentication.BaseAuthentication):
                 try:
                     provider = user.providers.filter(name=decoded_token.get('firebase').get('sign_in_provider')).first()
                     if not provider:
-                        user.providers.create(name=decoded_token.get('firebase').get('sign_in_provider'), user=user)
+                        Provider.objects.create(name=decoded_token.get('firebase').get('sign_in_provider'), user=user)
                 except Exception as e:
                     raise e
         except User.DoesNotExist:
-            user = User.objects.create(uid=uid, email=decoded_token.get('email'), provider=decoded_token.get('firebase').get('sign_in_provider'))
+            user = User.objects.create_user(uid=uid, email=decoded_token.get('email'), provider=decoded_token.get('firebase').get('sign_in_provider'))
         except Exception as e:
             print("Error:", e)
         print(user)

@@ -16,7 +16,12 @@ class Shop(models.Model):
         return self.name
     
     def save(self, *args, **kwargs):
-        if self.id and self.owner is None:
-            self.is_active = False        
+        if self.id:
+            if self.owner is None:
+                self.is_active = False
+            else:
+                self.is_active = True
+        else:
+            self.is_active = True
         super(Shop, self).save(*args, **kwargs)
 
