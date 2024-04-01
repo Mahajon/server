@@ -52,17 +52,14 @@ class FirebaseAuthenticationBackend(authentication.BaseAuthentication):
             if user.uid is None:
                 user.uid = uid
                 user.save()
-            
-            if user.provider != decoded_token.get('firebase').get('sign_in_provider'):
+            provider = decoded_token.get('firebase').get('sign_in_provider')
+            if not Provider.objects.filter(name=provider, user=user).exists():
                 try:
-                    provider = user.providers.filter(name=decoded_token.get('firebase').get('sign_in_provider')).first()
-                    if not provider:
-                        Provider.objects.create(name=decoded_token.get('firebase').get('sign_in_provider'), user=user)
+                    Provider.objects.create(name=provider, user=user)
                 except Exception as e:
                     raise e
         except User.DoesNotExist:
             user = User.objects.create_user(uid=uid, email=decoded_token.get('email'), provider=decoded_token.get('firebase').get('sign_in_provider'))
         except Exception as e:
             print("Error:", e)
-        print(user)
         return (user, self)
