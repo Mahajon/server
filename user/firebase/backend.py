@@ -36,9 +36,6 @@ class FirebaseAuthenticationBackend(authentication.BaseAuthentication):
             raise InvalidAuthToken("Invalid authentication token provided.")
         if not id_token or not decoded_token:
             return None
-        # email_verified = decoded_token.get('email_verified')
-        # if not email_verified:
-        #     raise EmailVerification("Email not verified. please verify your email address.")
         try:
             uid = decoded_token.get('uid')
         except Exception:

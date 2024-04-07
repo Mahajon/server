@@ -24,15 +24,12 @@ class UserViewSet(viewsets.ViewSet):
     def get(self, request):
         try:
             user = request.user
-            print(user)
             if user is not None:
                 serializer = UserSerializer(user)
-                print(serializer.data)
                 return JsonResponse(serializer.data, status=status.HTTP_200_OK)
             else:
                 raise Exception("Unauthorized")
         except Exception as e:
-            print(e)
             return HttpResponse("Unauthorized", status=status.HTTP_401_UNAUTHORIZED)
         
     def put(self, request):
