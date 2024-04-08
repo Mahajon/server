@@ -64,7 +64,7 @@ MIDDLEWARE = [
 ]
 
 # Whitenoise caching
-STATICFILES_STORAGE = "whitenoise.storage.CompressedManifestStaticFilesStorage"
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 
 ROOT_URLCONF = 'dokan.urls'
