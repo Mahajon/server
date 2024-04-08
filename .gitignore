@@ -1,6 +1,9 @@
 service-account.json
 
 
+#static files
+staticfiles/
+
 .vercel
 *.log
 *.pyc
