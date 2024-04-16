@@ -10,7 +10,7 @@ staticfiles/
 __pycache__
 db.sqlite3
 media
-*/migrations/*.py
+*/migrations/
 
 # Environments 
 .env 
