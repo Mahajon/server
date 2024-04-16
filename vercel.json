@@ -7,7 +7,7 @@
         {
             "src": "build-files.sh",
             "use": "@vercel/static-build",
-            "config": { "distDir": "staticfiles_builds" }
+            "config": { "distDir": "staticfiles" }
         }
     ],
     "routes": [
