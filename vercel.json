@@ -7,7 +7,7 @@
         {
             "src": "build-files.sh",
             "use": "@vercel/static-build",
-            "config": { "distDir": "staticfiles_build" }
+            "config": { "distDir": "staticfiles" }
         }
     ],
     "routes": [
@@ -20,5 +20,5 @@
             "dest": "mahajon/wsgi.py"
         }
     ],
-    "outputDirectory": "staticfiles_build"
+    "outputDirectory": "staticfiles"
 }
