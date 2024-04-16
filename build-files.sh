@@ -1,3 +1,4 @@
+echo "Running build files..."
 echo "Building project packages..."
 python3 -m pip install -r requirements.txt
 
