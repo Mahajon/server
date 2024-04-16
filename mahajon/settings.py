@@ -108,7 +108,7 @@ PROD_DATABASE = {
         )
 }
 
-DATABASE = LOCAL_DATABASE if DEBUG else PROD_DATABASE
+DATABASES = LOCAL_DATABASE if DEBUG else PROD_DATABASE
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
