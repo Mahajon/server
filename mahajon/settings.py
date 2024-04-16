@@ -100,19 +100,15 @@ LOCAL_DATABASE = {
     }
 }
 
-PREVIEW_DATABASE = {
-    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
-}
-
-
 PROD_DATABASE = {
-    'default': dj_database_url.parse(os.getenv('DATABASE_URL'))
+    'default': dj_database_url.parse(
+        os.getenv('DATABASE_URL'),
+        conn_max_age=600,
+        conn_health_checks=True,
+        )
 }
 
-ENV = os.getenv('ENVIRONMENT')
-
-DATABASES = LOCAL_DATABASE if ENV == 'local' else PREVIEW_DATABASE if ENV == 'preview' else PROD_DATABASE
-
+DATABASE = LOCAL_DATABASE if DEBUG else PROD_DATABASE
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators
