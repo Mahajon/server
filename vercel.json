@@ -19,5 +19,6 @@
             "src": "/(.*)",
             "dest": "mahajon/wsgi.py"
         }
-    ]
+    ],
+    "outputDirectory": "staticfiles"
 }
