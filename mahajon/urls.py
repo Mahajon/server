@@ -1,4 +1,4 @@
-"""dokan URL Configuration
+"""mahajon URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/4.1/topics/http/urls/
@@ -21,9 +21,9 @@ from drf_yasg import openapi
 
 schema_view = get_schema_view(
    openapi.Info(
-      title="Snippets API",
-      default_version='v1',
-      description="Test description",
+      title="Mahajon API",
+      default_version='v0',
+      description="API for Mahajon",
       terms_of_service="https://www.google.com/policies/terms/",
       contact=openapi.Contact(email="contact@snippets.local"),
       license=openapi.License(name="BSD License"),
@@ -39,6 +39,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('users/', include('user.urls')),
     path('shops/', include('shop.urls')),
-    path('products/', include('product.urls')),
     path('orders/', include('order.urls')),
 ]

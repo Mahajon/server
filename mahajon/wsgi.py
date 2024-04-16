@@ -1,5 +1,5 @@
 """
-WSGI config for dokan project.
+WSGI config for mahajon project.
 
 It exposes the WSGI callable as a module-level variable named ``app``.
 
@@ -11,6 +11,6 @@ import os
 
 from django.core.wsgi import get_wsgi_application
 
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'dokan.settings')
+os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'mahajon.settings')
 
 app = get_wsgi_application()

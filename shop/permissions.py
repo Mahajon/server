@@ -18,7 +18,7 @@ class IsShopOwnerOrManager(BasePermission):
             return obj.owner == request.user
         
 
-class ShopProductPermission(BasePermission):
+class ShopPermission(BasePermission):
     """
     Allows access only to shop owners or managers for specific shop.
     """
@@ -28,5 +28,13 @@ class ShopProductPermission(BasePermission):
         if not request.user.is_authenticated:
             return False  # Handle unauthenticated users
         return (obj.owner == request.user or obj.managers.filter(pk=request.user.pk).exists())
+    
+
+class ProductPermission(BasePermission):
+    def has_object_permission(self, request, view, obj):
+        # Check if user is owner or manager of the shop object (obj)
+        if not request.user.is_authenticated:
+            return False
+        return (obj.shop.owner == request.user or obj.shop.managers.filter(pk=request.user.pk).exists())
 
 

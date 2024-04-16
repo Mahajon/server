@@ -5,7 +5,7 @@ import firebase_admin
 from user.models import User, Provider
 import os
 import json
-from dokan.settings import DEBUG, BASE_DIR
+from mahajon.settings import DEBUG, BASE_DIR
 
 
 try:

@@ -43,11 +43,6 @@ class ProductSerializer(serializers.ModelSerializer):
     def validate_slug(self, value):
         # Find if the slug is unique or not
         # objs = Product.objects.filter(slug=value).count()
-        # # if objects with the slug exists, 
-        # while objs > 0:
-        #     value = f'{value}-{objs}'
-        #     objs = Product.objects.filter(slug=value).count()
-        # return f'{value}-{objs}'
         num_objs = Product.objects.filter(slug__startswith=value).count()
         if num_objs > 0:
             return f'{value}-{num_objs}'

@@ -1,17 +1,24 @@
 #shop/urls.py
 from django.urls import path
-
+from rest_framework.routers import DefaultRouter
 from .views import *
 
+# router = DefaultRouter()
+
+# router.register('<int:shop>/categories', CategoryView, basename='category')
+# router.register('<int:shop>/products', ProductView, basename='product')
+# router.register('subcategories', SubcategoryView, basename='subcategory')
+
 urlpatterns = [
-    path('<int:shop_id>/', ProductList.as_view(), name='product-list'),
-    # path('<int:product_id>/', ProductDetail.as_view(), name='product-detail'),
-    # path('<int:product_id>/images/', ProductImageList.as_view(), name='product-image-list'),
-    # path('<int:product_id>/images/<int:image_id>/', ProductImageDetail.as_view(), name='product-image-detail'),
-    # path('<int:product_id>/tags/', TagList.as_view(), name='tag-list'),
-    # path('categories/', CategoryList.as_view(), name='category-list'),
-    # path('categories/<int:category_id>/', CategoryDetail.as_view(), name='category-detail'),
-    # path('categories/<int:category_id>/subcategories/', SubcategoryList.as_view(), name='subcategory-list'),
-    # path('categories/<int:category_id>/subcategories/<int:subcategory_id>/', SubcategoryDetail.as_view(), name='subcategory-detail'),
-    # path('<int:product_id>/tags/<int:tag_id>/', TagDetail.as_view(), name='tag-detail'),
+    path('<str:shop_slug>/categories/', CategoryList.as_view(), name='category-list'),
+    path('<str:shop_slug>/categories/<int:pk>/', CategoryDetail.as_view(), name='category-detail'),
+    path('<slug:shop_slug>/categories/<int:pk>/subcategories/', SubcategoryList.as_view(), name='subcategory-list'),
+    path('<slug:shop_slug>/categories/<int:pk>/subcategories/<int:subpk>/', SubcategoryDetail.as_view(), name='subcategory-detail'),
+    path('<slug:shop_slug>/products/', ProductList.as_view(), name='product-list'),
+    path('<slug:shop_slug>/products/<int:pk>/', ProductDetail.as_view(), name='product-detail'),
+    path('<slug:shop_slug>/products/<int:pk>/images/', ProductImageList.as_view(), name='product-image-list'),
+    path('<slug:shop_slug>/products/<int:pk>/images/<int:imagepk>/', ProductImageDetail.as_view(), name='product-image-detail'),
+
 ]
+
+# urlpatterns += router.urls

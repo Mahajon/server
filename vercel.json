@@ -1,14 +1,14 @@
 {
     "builds": [
         {
-            "src": "dokan/wsgi.py",
+            "src": "mahajon/wsgi.py",
             "use": "@vercel/python"
         }
     ],
     "routes": [
         {
             "src": "/(.*)",
-            "dest": "dokan/wsgi.py"
+            "dest": "mahajon/wsgi.py"
         }
     ]
 }
