@@ -13,13 +13,13 @@ from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListCreateAPIView
 
 class CategoryList(APIView):
-    def get(self, request, shop_slug):
-        categories = Category.objects.filter(shop__slug=shop_slug)
+    def get(self, request):
+        shop = request.query_params.get('shop')
+        categories = Category.objects.filter(shop__slug=shop)
         serializer = CategorySerializer(categories, many=True)
         return Response(serializer.data)
     
-    def post(self, request, shop_slug):
-        request.data['shop'] = Shop.objects.get(slug=shop_slug).id
+    def post(self, request, ):
         request.data['created_by'] = request.user.id
         serializer = CategorySerializer(data=request.data)
         if serializer.is_valid():
@@ -29,41 +29,40 @@ class CategoryList(APIView):
     
 
 class CategoryDetail(APIView):
-    def get(self, request, shop_slug, pk):
-        category = Category.objects.get(shop=shop_slug, id=pk)
+    def get(self, request, pk):
+        category = Category.objects.get( id=pk)
         serializer = CategorySerializer(category)
         return Response(serializer.data)
     
-    def put(self, request, shop_slug, pk):
-        category = Category.objects.get(shop__slug=shop_slug, id=pk)
+    def put(self, request, pk):
+        category = Category.objects.get(id=pk)
         serializer = CategorySerializer(category, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def patch(self, request, shop_slug, pk):
-        category = Category.objects.get(shop__slug=shop_slug, id=pk)
+    def patch(self, request, pk):
+        category = Category.objects.get(id=pk)
         serializer = CategorySerializer(category, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, shop_slug, pk):
-        category = Category.objects.get(shop__slug=shop_slug, id=pk)
+    def delete(self, request, pk):
+        category = Category.objects.get(id=pk)
         category.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
 class SubcategoryList(APIView):
-    def get(self, request, shop_slug, pk):
-        subcategories = Subcategory.objects.filter(shop__slug=shop_slug, category=pk)
+    def get(self, request, pk):
+        subcategories = Subcategory.objects.filter(category=pk)
         serializer = SubcategorySerializer(subcategories, many=True)
         return Response(serializer.data)
     
-    def post(self, request, shop_slug, pk):
-        request.data['shop'] = Shop.objects.get(slug=shop_slug).id
+    def post(self, request, pk):
         request.data['category'] = pk
         request.data['created_by'] = request.user.id
         serializer = SubcategorySerializer(data=request.data)
@@ -74,41 +73,41 @@ class SubcategoryList(APIView):
     
 
 class SubcategoryDetail(APIView):
-    def get(self, request, shop_slug, pk, subpk):
-        subcategory = Subcategory.objects.get(shop__slug=shop_slug, category=pk, id=subpk)
+    def get(self, request, pk, subpk):
+        subcategory = Subcategory.objects.get(category=pk, id=subpk)
         serializer = SubcategorySerializer(subcategory)
         return Response(serializer.data)
     
-    def put(self, request, shop_slug, pk, subpk):
-        subcategory = Subcategory.objects.get(shop__slug=shop_slug, category=pk, id=subpk)
+    def put(self, request, pk, subpk):
+        subcategory = Subcategory.objects.get(category=pk, id=subpk)
         serializer = SubcategorySerializer(subcategory, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def patch(self, request, shop_slug, pk, subpk):
-        subcategory = Subcategory.objects.get(shop__slug=shop_slug, category=pk, id=subpk)
+    def patch(self, request, pk, subpk):
+        subcategory = Subcategory.objects.get(category=pk, id=subpk)
         serializer = SubcategorySerializer(subcategory, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, shop_slug, pk, subpk):
-        subcategory = Subcategory.objects.get(shop__slug=shop_slug, category=pk, id=subpk)
+    def delete(self, request, pk, subpk):
+        subcategory = Subcategory.objects.get(category=pk, id=subpk)
         subcategory.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
 
 class TagList(APIView):
-    def get(self, request, shop_slug):
-        tags = Tag.objects.filter(shop__slug=shop_slug)
+    def get(self, request):
+        shop = request.query_params.get('shop')
+        tags = Tag.objects.filter(shop__slug=shop)
         serializer = TagSerializer(tags, many=True)
         return Response(serializer.data)
     
-    def post(self, request, shop_slug):
-        request.data['shop'] = Shop.objects.get(slug=shop_slug).id
+    def post(self, request):
         request.data['created_by'] = request.user.id
         serializer = TagSerializer(data=request.data)
         if serializer.is_valid():
@@ -118,21 +117,21 @@ class TagList(APIView):
     
 
 class TagDetail(APIView):
-    def get(self, request, shop_slug, tag_id):
-        tag = Tag.objects.get(shop__slug=shop_slug, id=tag_id)
+    def get(self, request, tag_id):
+        tag = Tag.objects.get(id=tag_id)
         serializer = TagSerializer(tag)
         return Response(serializer.data)
     
-    def put(self, request, shop_slug, tag_id):
-        tag = Tag.objects.get(shop__slug=shop_slug, id=tag_id)
+    def put(self, request, tag_id):
+        tag = Tag.objects.get(id=tag_id)
         serializer = TagSerializer(tag, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, shop_slug, tag_id):
-        tag = Tag.objects.get(shop__slug=shop_slug, id=tag_id)
+    def delete(self, request, tag_id):
+        tag = Tag.objects.get(id=tag_id)
         tag.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
@@ -144,14 +143,17 @@ class ProductList(ListCreateAPIView):
     serializer_class = ProductSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['name', 'tags__name']
+    ordering_fields = ['id','name', 'price', 'created_at']
+    # default ordering
+    ordering = ['-id']
 
     def get_queryset(self):
-        shop_slug = self.kwargs['shop_slug']
+        #extract the shop slug from get params
+        shop_slug = self.request.query_params.get('shop')
         return Product.objects.filter(shop__slug=shop_slug)
 
     def perform_create(self, serializer):
-        shop_slug = self.kwargs['shop_slug']
-        serializer.save(created_by=self.request.user, shop=Shop.objects.get(slug=shop_slug))
+        serializer.save(created_by=self.request.user)
 
 
 
@@ -159,41 +161,41 @@ class ProductList(ListCreateAPIView):
 
 class ProductDetail(APIView):
     permission_classes = [IsAuthenticated, ProductPermission]
-    def get(self, request, shop_slug, pk):
-        product = Product.objects.get(shop__slug=shop_slug, id=pk)
+    def get(self, request, pk):
+        product = Product.objects.get(id=pk)
         serializer = ProductSerializer(product)
         return Response(serializer.data)
     
-    def put(self, request, shop_slug, pk):
-        product = Product.objects.get(shop__slug=shop_slug, id=pk)
+    def put(self, request, pk):
+        product = Product.objects.get(id=pk)
         serializer = ProductSerializer(product, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def patch(self, request, shop_slug, pk):
-        product = Product.objects.get(shop__slug=shop_slug, id=pk)
+    def patch(self, request, pk):
+        product = Product.objects.get(id=pk)
         serializer = ProductSerializer(product, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, shop_slug, pk):
-        product = Product.objects.get(shop__slug=shop_slug, id=pk)
+    def delete(self, request, pk):
+        product = Product.objects.get(id=pk)
         product.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 class ProductImageList(APIView):
     permission_classes = [IsAuthenticated, ProductPermission]
-    def get(self, request, shop_slug, pk):
-        images = ProductImage.objects.filter(product__shop__slug=shop_slug, product=pk)
+    def get(self, request, pk):
+        images = ProductImage.objects.filter(product__product=pk)
         serializer = ProductImageSerializer(images, many=True)
         return Response(serializer.data)
     
-    def post(self, request, shop_slug, pk):
+    def post(self, request, pk):
         request.data['product'] = pk
         serializer = ProductImageSerializer(data=request.data)
         if serializer.is_valid():
@@ -204,28 +206,28 @@ class ProductImageList(APIView):
 
 class ProductImageDetail(APIView):
     permission_classes = [IsAuthenticated, ProductPermission]
-    def get(self, request, shop_slug, pk, imgpk):
-        image = ProductImage.objects.get(product__shop__slug=shop_slug, product=pk, id=imgpk)
+    def get(self, request, pk, imgpk):
+        image = ProductImage.objects.get(product__product=pk, id=imgpk)
         serializer = ProductImageSerializer(image)
         return Response(serializer.data)
     
-    def put(self, request, shop_slug, pk, imgpk):
-        image = ProductImage.objects.get(product__shop__slug=shop_slug, product=pk, id=imgpk)
+    def put(self, request, pk, imgpk):
+        image = ProductImage.objects.get(product__product=pk, id=imgpk)
         serializer = ProductImageSerializer(image, data=request.data)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def patch(self, request, shop_slug, pk, imgpk):
-        image = ProductImage.objects.get(product__shop__slug=shop_slug, product=pk, id=imgpk)
+    def patch(self, request, pk, imgpk):
+        image = ProductImage.objects.get(product__product=pk, id=imgpk)
         serializer = ProductImageSerializer(image, data=request.data, partial=True)
         if serializer.is_valid():
             serializer.save()
             return Response(serializer.data)
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
     
-    def delete(self, request, shop_slug, pk, imgpk):
-        image = ProductImage.objects.get(product__shop__slug=shop_slug, product=pk, id=imgpk)
+    def delete(self, request, pk, imgpk):
+        image = ProductImage.objects.get(product__product=pk, id=imgpk)
         image.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)

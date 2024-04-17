@@ -10,14 +10,14 @@ from .views import *
 # router.register('subcategories', SubcategoryView, basename='subcategory')
 
 urlpatterns = [
-    path('<str:shop_slug>/categories/', CategoryList.as_view(), name='category-list'),
-    path('<str:shop_slug>/categories/<int:pk>/', CategoryDetail.as_view(), name='category-detail'),
-    path('<slug:shop_slug>/categories/<int:pk>/subcategories/', SubcategoryList.as_view(), name='subcategory-list'),
-    path('<slug:shop_slug>/categories/<int:pk>/subcategories/<int:subpk>/', SubcategoryDetail.as_view(), name='subcategory-detail'),
-    path('<slug:shop_slug>/products/', ProductList.as_view(), name='product-list'),
-    path('<slug:shop_slug>/products/<int:pk>/', ProductDetail.as_view(), name='product-detail'),
-    path('<slug:shop_slug>/products/<int:pk>/images/', ProductImageList.as_view(), name='product-image-list'),
-    path('<slug:shop_slug>/products/<int:pk>/images/<int:imagepk>/', ProductImageDetail.as_view(), name='product-image-detail'),
+    path('categories/', CategoryList.as_view(), name='category-list'),
+    path('categories/<int:pk>/', CategoryDetail.as_view(), name='category-detail'),
+    path('categories/<int:pk>/subcategories/', SubcategoryList.as_view(), name='subcategory-list'),
+    path('categories/<int:pk>/subcategories/<int:subpk>/', SubcategoryDetail.as_view(), name='subcategory-detail'),
+    path('products/', ProductList.as_view(), name='product-list'),
+    path('products/<int:pk>/', ProductDetail.as_view(), name='product-detail'),
+    path('products/<int:pk>/images/', ProductImageList.as_view(), name='product-image-list'),
+    path('products/<int:pk>/images/<int:imagepk>/', ProductImageDetail.as_view(), name='product-image-detail'),
 
 ]
 
