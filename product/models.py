@@ -61,12 +61,17 @@ class Tag(models.Model):
     
 
 class Product(models.Model):
+    STATUS_CHOICES = (
+        ('draft', 'Draft'),
+        ('published', 'Published'),
+        ('archived', 'Archived')
+    )
     slug = models.SlugField(max_length=255, unique=True)
     name = models.CharField(max_length=255)
     description = models.TextField(null=True, blank=True)
     price = models.DecimalField(max_digits=10, decimal_places=2, default=0.00)
     stock = models.PositiveIntegerField(default=0)
-    available = models.BooleanField(default=True)
+    status = models.CharField(max_length=255, choices=STATUS_CHOICES, default='draft')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     tags = models.ManyToManyField(Tag, related_name='products')

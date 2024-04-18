@@ -144,6 +144,7 @@ class ProductList(ListCreateAPIView):
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['name', 'tags__name']
     ordering_fields = ['id','name', 'price', 'created_at']
+    filterset_fields = ['status','category', 'subcategory', 'tags']
     # default ordering
     ordering = ['-id']
 
