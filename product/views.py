@@ -12,20 +12,36 @@ from .pagination import CustomPagination, NoPagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListCreateAPIView
 
-class CategoryList(APIView):
-    def get(self, request):
-        shop = request.query_params.get('shop')
-        categories = Category.objects.filter(shop__slug=shop)
-        serializer = CategorySerializer(categories, many=True)
-        return Response(serializer.data)
+# class CategoryList(APIView):
+#     def get(self, request):
+#         shop = request.query_params.get('shop')
+#         categories = Category.objects.filter(shop__slug=shop)
+#         serializer = CategorySerializer(categories, many=True)
+#         return Response(serializer.data)
     
-    def post(self, request, ):
-        request.data['created_by'] = request.user.id
-        serializer = CategorySerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+#     def post(self, request, ):
+#         request.data['created_by'] = request.user.id
+#         serializer = CategorySerializer(data=request.data)
+#         if serializer.is_valid():
+#             serializer.save()
+#             return Response(serializer.data, status=status.HTTP_201_CREATED)
+#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+    
+
+class CategoryList(ListCreateAPIView):
+    permission_classes = [IsAuthenticated]
+    pagination_class = NoPagination
+    serializer_class = CategorySerializer
+    ordering = ['-id']
+
+    def get_queryset(self):
+        #extract the shop slug from get params
+        shop_slug = self.request.query_params.get('shop')
+        return Category.objects.filter(shop__slug=shop_slug)
+
+    def perform_create(self, serializer):
+        # shop_slug = self.request.query_params.get('shop')
+        serializer.save(created_by=self.request.user)
     
 
 class CategoryDetail(APIView):
