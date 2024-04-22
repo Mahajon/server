@@ -38,7 +38,12 @@ ALLOWED_HOSTS = ['127.0.0.1', '.vercel.app', 'localhost:3000', 'api.mahajon.com'
 
 # Application definition
 
-INSTALLED_APPS = [
+SHARED_APPS = [
+    'django_tenants',
+    'user',
+    'shop',
+    'public',
+
     "whitenoise.runserver_nostatic",
     'django.contrib.admin',
     'django.contrib.auth',
@@ -50,13 +55,42 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework',
     'django_filters',
-    'user',
-    'shop',
-    'product',
-    'order',
 ]
 
+TENANT_APPS = [
+    'product',
+    # 'order',
+]
+
+INSTALLED_APPS = SHARED_APPS + [app for app in TENANT_APPS if app not in SHARED_APPS]
+
+# Tenant Settings
+TENANT_MODEL = "shop.Shop"
+
+TENANT_DOMAIN_MODEL = "shop.Domain"
+
+# PUBLIC_SCHEMA_URLCONF = 'public.urls'
+
+SHOW_PUBLIC_IF_NO_TENANT_FOUND = True
+
+DEFAULT_AUTO_SCHEMA_CLASS = 'drf_yasg.openapi.AutoSchema'
+
+SWAGGER_SETTINGS = {
+    "USE_SESSION_AUTH": True,
+      'SECURITY_DEFINITIONS': {
+        "Basic": {"type": "basic"},
+         'DRF Token': {
+               'type': 'apiKey',
+               'name': 'Authorization',
+               'in': 'header'
+         }
+      },
+    "REFETCH_SCHEMA_WITH_AUTH": True,
+   }
+
 MIDDLEWARE = [
+    'shop.middleware.ShopMainMiddleware',
+    # 'django_tenants.middleware.main.TenantMainMiddleware',
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',
@@ -100,22 +134,22 @@ WSGI_APPLICATION = 'mahajon.wsgi.app'
 # environments like Vercel. You can use a database over HTTP, hosted elsewhere.
 
 
-LOCAL_DATABASE = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+DATABASES = {
+    'default':{
+        'ENGINE': 'django_tenants.postgresql_backend',
+        'NAME': os.getenv('DB_NAME'),
+        'USER': os.getenv('DB_USER'),
+        'PASSWORD': os.getenv('DB_PASSWORD'),
+        'HOST': os.getenv('DB_HOST'),
+        'PORT': os.getenv('DB_PORT'),
+    },
 }
 
-PROD_DATABASE = {
-    'default': dj_database_url.parse(
-        os.getenv('DATABASE_URL'),
-        conn_max_age=600,
-        conn_health_checks=True,
-        )
-}
+DATABASE_ROUTERS = (
+    "django_tenants.routers.TenantSyncRouter",
+)
 
-DATABASES = LOCAL_DATABASE if DEBUG else PROD_DATABASE
+
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

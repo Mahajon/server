@@ -29,6 +29,7 @@ class FirebaseAuthenticationBackend(authentication.BaseAuthentication):
         if not auth_header:
             raise NoAuthToken("No authentication token provided.")
         id_token = auth_header.split(' ').pop()
+        print(id_token)
         decoded_token = None
         try:
             decoded_token = auth.verify_id_token(id_token)
