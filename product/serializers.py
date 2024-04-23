@@ -11,7 +11,6 @@ class SubcategorySerializer(serializers.ModelSerializer):
 
 class CategorySerializer(serializers.ModelSerializer):
     subcategories = SubcategorySerializer(many=True, read_only=True)
-    shop = serializers.SlugRelatedField(slug_field='slug', queryset=Shop.objects.all())
     
     class Meta:
         model = Category
