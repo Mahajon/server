@@ -6,9 +6,8 @@ from user.models import User
 # Create your models here.
 
 class Category(models.Model):
-    slug = models.SlugField(max_length=255, null=True, blank=True)
+    slug = models.SlugField(max_length=255, null=True, blank=True, unique=True)
     name = models.CharField(max_length=255)
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='categories')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_categories')
@@ -18,8 +17,8 @@ class Category(models.Model):
     def save(self, *args, **kwargs):
         if not self.slug:
             self.slug = self.name.lower().replace(' ', '-')
-            if Category.objects.filter(slug__startswith=self.slug, shop=self.shop).count() > 0:
-                self.slug = f'{self.slug}-{Category.objects.filter(slug=self.slug).count()}'
+            if Category.objects.filter(slug__startswith=self.slug).count() > 0:
+                self.slug = f'{self.slug}-{Category.objects.filter(slug__startswith=self.slug).count()}'
         super(Category, self).save(*args, **kwargs)
  
 
@@ -75,7 +74,7 @@ class Product(models.Model):
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     tags = models.ManyToManyField(Tag, related_name='products')
-    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='products')
+    # shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='products')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     created_by = models.ForeignKey(User, on_delete=models.SET_NULL, null=True, blank=True, related_name='created_products')

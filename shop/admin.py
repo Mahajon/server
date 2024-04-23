@@ -1,9 +1,10 @@
 from django.contrib import admin
-from .models import Shop
+from .models import Shop, Domain
+from django_tenants.admin import TenantAdminMixin
 # Register your models here.
 
 
-class ShopAdmin(admin.ModelAdmin):
+class ShopAdmin(TenantAdminMixin, admin.ModelAdmin):
     list_display = ('name', 'owner', 'created_at', 'updated_at')
     search_fields = ('name', 'owner')
     list_filter = ('created_at', 'updated_at')
@@ -17,3 +18,4 @@ class ShopAdmin(admin.ModelAdmin):
 
 
 admin.site.register(Shop, ShopAdmin)
+admin.site.register(Domain)

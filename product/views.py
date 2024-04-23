@@ -12,21 +12,6 @@ from .pagination import CustomPagination, NoPagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListCreateAPIView
 
-# class CategoryList(APIView):
-#     def get(self, request):
-#         shop = request.query_params.get('shop')
-#         categories = Category.objects.filter(shop__slug=shop)
-#         serializer = CategorySerializer(categories, many=True)
-#         return Response(serializer.data)
-    
-#     def post(self, request, ):
-#         request.data['created_by'] = request.user.id
-#         serializer = CategorySerializer(data=request.data)
-#         if serializer.is_valid():
-#             serializer.save()
-#             return Response(serializer.data, status=status.HTTP_201_CREATED)
-#         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
-    
 
 class CategoryList(ListCreateAPIView):
     permission_classes = [IsAuthenticated]
@@ -36,11 +21,9 @@ class CategoryList(ListCreateAPIView):
 
     def get_queryset(self):
         #extract the shop slug from get params
-        shop_slug = self.request.query_params.get('shop')
-        return Category.objects.filter(shop__slug=shop_slug)
+        return Category.objects.all()
 
     def perform_create(self, serializer):
-        # shop_slug = self.request.query_params.get('shop')
         serializer.save(created_by=self.request.user)
     
 
@@ -151,6 +134,15 @@ class TagDetail(APIView):
         tag.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
+from drf_yasg import openapi
+from drf_yasg.utils import swagger_auto_schema
+
+header_param = openapi.Parameter('local',openapi.IN_HEADER,description="local header param", type=openapi.IN_HEADER)
+
+@swagger_auto_schema(manual_parameters=[header_param])
+class ProductViewset(ModelViewSet):
+    queryset = Product.objects.all()
+    serializer_class = ProductSerializer
 
 
 class ProductList(ListCreateAPIView):
@@ -165,9 +157,7 @@ class ProductList(ListCreateAPIView):
     ordering = ['-id']
 
     def get_queryset(self):
-        #extract the shop slug from get params
-        shop_slug = self.request.query_params.get('shop')
-        return Product.objects.filter(shop__slug=shop_slug)
+        return Product.objects.all()
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)

@@ -56,7 +56,8 @@ class FirebaseAuthenticationBackend(authentication.BaseAuthentication):
                 except Exception as e:
                     raise e
         except User.DoesNotExist:
-            user = User.objects.create_user(uid=uid, email=decoded_token.get('email'), provider=decoded_token.get('firebase').get('sign_in_provider'))
+            user = User.objects.create_user(uid=uid, email=decoded_token.get('email'))
+            Provider.objects.create(name=decoded_token.get('firebase').get('sign_in_provider'), user=user)
         except Exception as e:
             print("Error:", e)
         return (user, self)
