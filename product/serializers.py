@@ -36,6 +36,18 @@ class ProductVariantSerializer(serializers.ModelSerializer):
         fields = '__all__'
 
 
+class ProductListSerializer(serializers.ModelSerializer):
+    def validate_slug(self, value):
+        num_objs = Product.objects.filter(slug__startswith=value).count()
+        if num_objs > 0:
+            return f'{value}-{num_objs}'
+        return value
+
+    class Meta:
+        model = Product
+        fields = '__all__'
+
+
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     variants = ProductVariantSerializer(many=True, read_only=True)

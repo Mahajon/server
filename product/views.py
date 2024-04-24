@@ -134,25 +134,19 @@ class TagDetail(APIView):
         tag.delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
     
-from drf_yasg import openapi
-from drf_yasg.utils import swagger_auto_schema
-
-header_param = openapi.Parameter('local',openapi.IN_HEADER,description="local header param", type=openapi.IN_HEADER)
-
-@swagger_auto_schema(manual_parameters=[header_param])
-class ProductViewset(ModelViewSet):
-    queryset = Product.objects.all()
-    serializer_class = ProductSerializer
-
+    
+"""
+Product Views
+""" 
 
 class ProductList(ListCreateAPIView):
     permission_classes = [IsAuthenticated, ProductPermission]
     pagination_class = CustomPagination
-    serializer_class = ProductSerializer
+    serializer_class = ProductListSerializer
     filter_backends = [filters.SearchFilter, filters.OrderingFilter, DjangoFilterBackend]
     search_fields = ['name', 'tags__name']
     ordering_fields = ['id','name', 'price', 'created_at']
-    filterset_fields = ['status','category', 'subcategory', 'tags']
+    filterset_fields = ['status']
     # default ordering
     ordering = ['-id']
 
@@ -161,9 +155,6 @@ class ProductList(ListCreateAPIView):
 
     def perform_create(self, serializer):
         serializer.save(created_by=self.request.user)
-
-
-
 
 
 class ProductDetail(APIView):

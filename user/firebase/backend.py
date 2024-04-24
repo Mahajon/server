@@ -17,7 +17,7 @@ try:
     app = firebase_admin.initialize_app(cred)
 
 except Exception:
-    raise FirebaseError("Firebase Admin SDK credentials not found. Please add the path to the credentials file to the FIREBASE_ADMIN_SDK_CREDENTIALS_PATH environment variable.")
+    raise FirebaseError("Firebase Admin SDK credentials not found. Please add the path to the credentials file to the FIREBASE_SERVICE_ACCOUNT environment variable.")
 
 
 
@@ -42,13 +42,6 @@ class FirebaseAuthenticationBackend(authentication.BaseAuthentication):
             raise FirebaseError("The user provided with auth token is not a firebase user. it has no firebase uid.")
         try:
             user = User.objects.get(email=decoded_token.get('email'))
-            user.picture = decoded_token.get('picture')
-            name = decoded_token.get('name').split(' ')
-            user.first_name = " ".join(name[:-1])
-            user.last_name = name[-1]
-            if user.uid is None:
-                user.uid = uid
-                user.save()
             provider = decoded_token.get('firebase').get('sign_in_provider')
             if not Provider.objects.filter(name=provider, user=user).exists():
                 try:
@@ -57,6 +50,13 @@ class FirebaseAuthenticationBackend(authentication.BaseAuthentication):
                     raise e
         except User.DoesNotExist:
             user = User.objects.create_user(uid=uid, email=decoded_token.get('email'))
+            user.picture = decoded_token.get('picture')
+            name = decoded_token.get('name').split(' ')
+            user.first_name = " ".join(name[:-1])
+            user.last_name = name[-1]
+            if user.uid is None:
+                user.uid = uid
+                user.save()
             Provider.objects.create(name=decoded_token.get('firebase').get('sign_in_provider'), user=user)
         except Exception as e:
             print("Error:", e)
