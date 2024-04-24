@@ -32,10 +32,10 @@ class ShopMainMiddleware(MiddlewareMixin):
         try:
             shop = Shop.objects.get(slug__iexact=shop_slug)
         except Shop.DoesNotExist:
-            if not settings.DEBUG:
-                return JsonResponse({"detail": "Shop not found"}, status=400)
-            # if shop_slug != "public":
-            request = self.no_shop_found(request, hostname)  # If no shop is found, then set to public Shop and return
+            if not settings.DEBUG and request.path.startswith("/auth/"):
+                return JsonResponse({"detail": "Shop not found"}, status=400)            
+            # If no shop is found, then set to public Shop and return
+            request = self.no_shop_found(request, hostname)  
             return request
         shop.domain_url = hostname
         request.tenant = shop
