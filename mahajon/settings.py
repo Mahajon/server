@@ -100,22 +100,9 @@ WSGI_APPLICATION = 'mahajon.wsgi.app'
 # environments like Vercel. You can use a database over HTTP, hosted elsewhere.
 
 
-LOCAL_DATABASE = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+DATABASES = {
+    'default': dj_database_url.config(default=os.getenv('DATABASE_URL'))
 }
-
-PROD_DATABASE = {
-    'default': dj_database_url.parse(
-        os.getenv('DATABASE_URL'),
-        conn_max_age=600,
-        conn_health_checks=True,
-        )
-}
-
-DATABASES = LOCAL_DATABASE if DEBUG else PROD_DATABASE
 
 # Password validation
 # https://docs.djangoproject.com/en/4.1/ref/settings/#auth-password-validators

@@ -36,17 +36,16 @@ class CategoryList(ListCreateAPIView):
 
     def get_queryset(self):
         #extract the shop slug from get params
-        shop_slug = self.request.query_params.get('shop')
+        shop_slug = self.request.headers.get('Shop')
         return Category.objects.filter(shop__slug=shop_slug)
 
     def perform_create(self, serializer):
-        # shop_slug = self.request.query_params.get('shop')
         serializer.save(created_by=self.request.user)
     
 
 class CategoryDetail(APIView):
     def get(self, request, pk):
-        category = Category.objects.get( id=pk)
+        category = Category.objects.get(id=pk)
         serializer = CategorySerializer(category)
         return Response(serializer.data)
     
@@ -165,8 +164,8 @@ class ProductList(ListCreateAPIView):
     ordering = ['-id']
 
     def get_queryset(self):
-        #extract the shop slug from get params
-        shop_slug = self.request.query_params.get('shop')
+        #extract the shop slug from headers
+        shop_slug = self.request.headers.get('Shop')
         return Product.objects.filter(shop__slug=shop_slug)
 
     def perform_create(self, serializer):

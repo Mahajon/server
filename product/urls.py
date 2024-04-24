@@ -3,11 +3,6 @@ from django.urls import path
 from rest_framework.routers import DefaultRouter
 from .views import *
 
-# router = DefaultRouter()
-
-# router.register('<int:shop>/categories', CategoryView, basename='category')
-# router.register('<int:shop>/products', ProductView, basename='product')
-# router.register('subcategories', SubcategoryView, basename='subcategory')
 
 urlpatterns = [
     path('categories/', CategoryList.as_view(), name='category-list'),
@@ -20,5 +15,3 @@ urlpatterns = [
     path('products/<int:pk>/images/<int:imagepk>/', ProductImageDetail.as_view(), name='product-image-detail'),
 
 ]
-
-# urlpatterns += router.urls

@@ -12,7 +12,6 @@ class SubcategorySerializer(serializers.ModelSerializer):
 class CategorySerializer(serializers.ModelSerializer):
     subcategories = SubcategorySerializer(many=True, read_only=True)
     shop = serializers.SlugRelatedField(slug_field='slug', queryset=Shop.objects.all())
-    
     class Meta:
         model = Category
         fields = '__all__'
@@ -40,11 +39,10 @@ class ProductVariantSerializer(serializers.ModelSerializer):
 class ProductSerializer(serializers.ModelSerializer):
     images = ProductImageSerializer(many=True, read_only=True)
     variants = ProductVariantSerializer(many=True, read_only=True)
-    tags = TagSerializer(many=True,)
+    tags = TagSerializer(many=True,read_only=True)
     slug = serializers.CharField()
+    shop = serializers.SlugRelatedField(slug_field='slug', queryset=Shop.objects.all())
     def validate_slug(self, value):
-        # Find if the slug is unique or not
-        # objs = Product.objects.filter(slug=value).count()
         num_objs = Product.objects.filter(slug__startswith=value).count()
         if num_objs > 0:
             return f'{value}-{num_objs}'
