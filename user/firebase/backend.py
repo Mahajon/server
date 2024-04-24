@@ -42,6 +42,8 @@ class FirebaseAuthenticationBackend(authentication.BaseAuthentication):
             raise FirebaseError("The user provided with auth token is not a firebase user. it has no firebase uid.")
         try:
             user = User.objects.get(email=decoded_token.get('email'))
+        except User.DoesNotExist:
+            user = User.objects.create_user(uid=uid, email=decoded_token.get('email'))
             user.picture = decoded_token.get('picture')
             name = decoded_token.get('name').split(' ')
             user.first_name = " ".join(name[:-1])
@@ -55,8 +57,6 @@ class FirebaseAuthenticationBackend(authentication.BaseAuthentication):
                     Provider.objects.create(name=provider, user=user)
                 except Exception as e:
                     raise e
-        except User.DoesNotExist:
-            user = User.objects.create_user(uid=uid, email=decoded_token.get('email'), provider=decoded_token.get('firebase').get('sign_in_provider'))
         except Exception as e:
             print("Error:", e)
         return (user, self)
