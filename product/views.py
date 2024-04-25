@@ -44,6 +44,7 @@ class CategoryList(ListCreateAPIView):
     
 
 class CategoryDetail(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         category = Category.objects.get(id=pk)
         serializer = CategorySerializer(category)
@@ -72,6 +73,7 @@ class CategoryDetail(APIView):
     
 
 class SubcategoryList(APIView):
+    permission_classes = [IsAuthenticated]
     def get(self, request, pk):
         subcategories = Subcategory.objects.filter(category=pk)
         serializer = SubcategorySerializer(subcategories, many=True)
@@ -88,6 +90,8 @@ class SubcategoryList(APIView):
     
 
 class SubcategoryDetail(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request, pk, subpk):
         subcategory = Subcategory.objects.get(category=pk, id=subpk)
         serializer = SubcategorySerializer(subcategory)
@@ -116,6 +120,8 @@ class SubcategoryDetail(APIView):
     
 
 class TagList(APIView):
+    permission_classes = [IsAuthenticated]
+
     def get(self, request):
         shop = request.query_params.get('shop')
         tags = Tag.objects.filter(shop__slug=shop)
@@ -132,6 +138,8 @@ class TagList(APIView):
     
 
 class TagDetail(APIView):
+    permission_classes = [IsAuthenticated]
+    
     def get(self, request, tag_id):
         tag = Tag.objects.get(id=tag_id)
         serializer = TagSerializer(tag)

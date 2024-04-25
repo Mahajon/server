@@ -19,6 +19,7 @@ from rest_framework import permissions
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from .views import index
+from django.conf import settings
 
 schema_view = get_schema_view(
    openapi.Info(
@@ -44,3 +45,6 @@ urlpatterns = [
     path('', include('product.urls')),
     path('orders/', include('order.urls')),
 ]
+
+if settings.DEBUG:
+    urlpatterns += [path('silk/', include('silk.urls', namespace='silk'))]
