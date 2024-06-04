@@ -44,6 +44,7 @@ urlpatterns = [
     path('', index, name='index'),
     path('', include('product.urls')),
     path('orders/', include('order.urls')),
+    path('public/', include('public.urls')),
 ]
 
 if settings.DEBUG:

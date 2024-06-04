@@ -25,3 +25,11 @@ class Shop(models.Model):
             self.is_active = True
         super(Shop, self).save(*args, **kwargs)
 
+
+class Domain(models.Model):
+    domain = models.CharField(max_length=255, unique=True)
+    shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='domains')
+    created_at = models.DateTimeField(auto_now_add=True)
+    updated_at = models.DateTimeField(auto_now=True)
+    def __str__(self):
+        return self.domain
