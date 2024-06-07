@@ -50,7 +50,6 @@ INSTALLED_APPS = [
     'drf_yasg',
     'rest_framework',
     'django_filters',
-    'silk',
     'user',
     'shop',
     'product',
@@ -59,7 +58,6 @@ INSTALLED_APPS = [
 ]
 
 MIDDLEWARE = [
-    'silk.middleware.SilkyMiddleware',
     'django.middleware.security.SecurityMiddleware',
     "whitenoise.middleware.WhiteNoiseMiddleware",
     'django.contrib.sessions.middleware.SessionMiddleware',

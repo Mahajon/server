@@ -1,7 +1,7 @@
 from django.db import models
 from shop.models import Shop
 from user.models import User
-
+import uuid
 
 # Create your models here.
 
@@ -74,7 +74,7 @@ class Product(models.Model):
     status = models.CharField(max_length=255, choices=STATUS_CHOICES, default='draft')
     category = models.ForeignKey(Category, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
     subcategory = models.ForeignKey(Subcategory, on_delete=models.CASCADE, related_name='products', null=True, blank=True)
-    tags = models.ManyToManyField(Tag, related_name='products')
+    tags = models.ManyToManyField(Tag, related_name='products', blank=True)
     shop = models.ForeignKey(Shop, on_delete=models.CASCADE, related_name='products')
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
@@ -116,7 +116,7 @@ class ProductVariant(models.Model):
     
 
 class ProductImage(models.Model):
-    image = models.URLField()
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False, auto_created=False)
     product = models.ForeignKey(Product, on_delete=models.CASCADE, related_name='images')
     created_at = models.DateTimeField(auto_now_add=True)
     def __str__(self):

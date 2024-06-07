@@ -4,7 +4,9 @@ from django.urls import path, include
 from .views import *
 
 urlpatterns = [
+    path('check/<str:slug>/', ShopCheckView.as_view(), name='check'),
     path('', ShopListView.as_view(), name='shop-list'),
     path('create/', ShopCreateView.as_view(), name='shop-create'),
+
     path('<str:slug>/', ShopDetailView.as_view(), name='shop-detail'),
 ]

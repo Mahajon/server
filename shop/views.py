@@ -18,6 +18,13 @@ class ShopPagination(PageNumberPagination):
     page_size = 10  # Set your desired page size
 
 
+class ShopCheckView(APIView):
+    def get(self, request, slug):
+        shop = Shop.objects.filter(slug=slug).exists()
+        if shop:
+            return Response({'exists': True}, status=status.HTTP_200_OK)
+        return Response({'exists': False}, status=status.HTTP_404_NOT_FOUND)
+
 class ShopCreateView(generics.CreateAPIView):
     serializer_class = ShopSerializer
     permission_classes = [IsAuthenticated]
@@ -68,3 +75,5 @@ class ShopDetailView(APIView):
         self.check_object_permissions(request, shop)
         shop.delete()
         return Response(status=status.HTTP_200_OK)
+
+

@@ -46,6 +46,3 @@ urlpatterns = [
     path('orders/', include('order.urls')),
     path('public/', include('public.urls')),
 ]
-
-if settings.DEBUG:
-    urlpatterns += [path('silk/', include('silk.urls', namespace='silk'))]

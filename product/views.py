@@ -11,7 +11,7 @@ from .serializers import *
 from .pagination import CustomPagination, NoPagination
 from rest_framework.viewsets import ModelViewSet
 from rest_framework.generics import ListCreateAPIView
-
+import uuid
 # class CategoryList(APIView):
 #     def get(self, request):
 #         shop = request.query_params.get('shop')
@@ -220,12 +220,19 @@ class ProductImageList(APIView):
         return Response(serializer.data)
     
     def post(self, request, pk):
-        request.data['product'] = pk
-        serializer = ProductImageSerializer(data=request.data)
-        if serializer.is_valid():
-            serializer.save()
-            return Response(serializer.data, status=status.HTTP_201_CREATED)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+        print(request.data)
+        images = request.data.getlist('images')
+        product = Product.objects.get(id=pk)
+        if len(images) > 0:
+            try:
+                for image in images:
+                    ProductImage.objects.create(id=uuid.UUID(image), product=product)
+            except Exception  as e:
+                print(e)
+                return Response(status=status.HTTP_400_BAD_REQUEST, data={'error':str(e)})  
+        return Response(status=status.HTTP_201_CREATED)
+    
+
     
 
 class ProductImageDetail(APIView):

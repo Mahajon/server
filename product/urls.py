@@ -12,6 +12,7 @@ urlpatterns = [
     path('products/', ProductList.as_view(), name='product-list'),
     path('products/<int:pk>/', ProductDetail.as_view(), name='product-detail'),
     path('products/<int:pk>/images/', ProductImageList.as_view(), name='product-image-list'),
+    
     path('products/<int:pk>/images/<int:imagepk>/', ProductImageDetail.as_view(), name='product-image-detail'),
 
 ]
